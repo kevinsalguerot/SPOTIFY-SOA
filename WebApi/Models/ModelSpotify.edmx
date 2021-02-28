@@ -1,0 +1,629 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="spotifyModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Album">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" />
+          <Property Name="Creador" Type="varchar" MaxLength="100" />
+          <Property Name="Imagen" Type="varchar" MaxLength="300" />
+        </EntityType>
+        <EntityType Name="DetallePlayList">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="IdMusica" Type="int" Nullable="false" />
+          <Property Name="IdPlayList" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Facturacion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdSuscripcion" Type="int" Nullable="false" />
+          <Property Name="Numero" Type="nchar" MaxLength="10" />
+          <Property Name="Importe" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="TipoPago" Type="nchar" MaxLength="10" />
+          <Property Name="NroOperacion" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Musica">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Titulo" Type="varchar" MaxLength="30" />
+          <Property Name="Artista" Type="varchar" MaxLength="30" />
+          <Property Name="Año" Type="int" />
+          <Property Name="Archivo" Type="varchar(max)" />
+          <Property Name="IdAlbum" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Perfil">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="30" />
+          <Property Name="Imagen" Type="varchar(max)" />
+          <Property Name="CantSeguidores" Type="int" />
+          <Property Name="IdUsuario" Type="int" />
+        </EntityType>
+        <EntityType Name="Planes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nchar" MaxLength="100" />
+          <Property Name="Detalle" Type="varchar(max)" />
+          <Property Name="Precio" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Moneda" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="PlayList">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nchar" MaxLength="20" />
+          <Property Name="Descripcion" Type="nchar" MaxLength="100" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="Imagen" Type="varchar" MaxLength="50" />
+          <Property Name="Acceso" Type="nchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="Suscripcion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPlan" Type="int" Nullable="false" />
+          <Property Name="Fecha_Ini" Type="datetime" />
+          <Property Name="Fecha_Fin" Type="datetime" />
+          <Property Name="Tarjeta_codigo" Type="nchar" MaxLength="5" />
+          <Property Name="Tarjeta_numero" Type="nchar" MaxLength="20" />
+          <Property Name="Tarjeta_fech_ecp" Type="datetime" />
+          <Property Name="Estado" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="email" Type="nchar" MaxLength="30" />
+          <Property Name="contrasena" Type="nchar" MaxLength="20" />
+          <Property Name="fecha_nacimiento" Type="datetime" />
+          <Property Name="nombre_perfil" Type="nchar" MaxLength="50" />
+          <Property Name="sexo" Type="nchar" MaxLength="1" />
+          <Property Name="IdSuscripcion" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_DetallePlayList_Musica">
+          <End Role="Musica" Type="Self.Musica" Multiplicity="1" />
+          <End Role="DetallePlayList" Type="Self.DetallePlayList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Musica">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DetallePlayList">
+              <PropertyRef Name="IdMusica" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DetallePlayList_PlayList">
+          <End Role="PlayList" Type="Self.PlayList" Multiplicity="1" />
+          <End Role="DetallePlayList" Type="Self.DetallePlayList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PlayList">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DetallePlayList">
+              <PropertyRef Name="IdPlayList" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Facturacion_Suscripcion">
+          <End Role="Suscripcion" Type="Self.Suscripcion" Multiplicity="1" />
+          <End Role="Facturacion" Type="Self.Facturacion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suscripcion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Facturacion">
+              <PropertyRef Name="IdSuscripcion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Musica_Album">
+          <End Role="Album" Type="Self.Album" Multiplicity="1" />
+          <End Role="Musica" Type="Self.Musica" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Album">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Musica">
+              <PropertyRef Name="IdAlbum" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Perfil_Usuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
+          <End Role="Perfil" Type="Self.Perfil" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Perfil">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlayList_Usuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="PlayList" Type="Self.PlayList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlayList">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Suscripcion_Planes">
+          <End Role="Planes" Type="Self.Planes" Multiplicity="1" />
+          <End Role="Suscripcion" Type="Self.Suscripcion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Planes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Suscripcion">
+              <PropertyRef Name="IdPlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuario_Suscripcion">
+          <End Role="Suscripcion" Type="Self.Suscripcion" Multiplicity="1" />
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suscripcion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Usuario">
+              <PropertyRef Name="IdSuscripcion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="spotifyModelStoreContainer">
+          <EntitySet Name="Album" EntityType="Self.Album" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DetallePlayList" EntityType="Self.DetallePlayList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Facturacion" EntityType="Self.Facturacion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Musica" EntityType="Self.Musica" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Perfil" EntityType="Self.Perfil" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Planes" EntityType="Self.Planes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlayList" EntityType="Self.PlayList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Suscripcion" EntityType="Self.Suscripcion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_DetallePlayList_Musica" Association="Self.FK_DetallePlayList_Musica">
+            <End Role="Musica" EntitySet="Musica" />
+            <End Role="DetallePlayList" EntitySet="DetallePlayList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DetallePlayList_PlayList" Association="Self.FK_DetallePlayList_PlayList">
+            <End Role="PlayList" EntitySet="PlayList" />
+            <End Role="DetallePlayList" EntitySet="DetallePlayList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Facturacion_Suscripcion" Association="Self.FK_Facturacion_Suscripcion">
+            <End Role="Suscripcion" EntitySet="Suscripcion" />
+            <End Role="Facturacion" EntitySet="Facturacion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Musica_Album" Association="Self.FK_Musica_Album">
+            <End Role="Album" EntitySet="Album" />
+            <End Role="Musica" EntitySet="Musica" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Perfil_Usuario" Association="Self.FK_Perfil_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Perfil" EntitySet="Perfil" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlayList_Usuario" Association="Self.FK_PlayList_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="PlayList" EntitySet="PlayList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Suscripcion_Planes" Association="Self.FK_Suscripcion_Planes">
+            <End Role="Planes" EntitySet="Planes" />
+            <End Role="Suscripcion" EntitySet="Suscripcion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuario_Suscripcion" Association="Self.FK_Usuario_Suscripcion">
+            <End Role="Suscripcion" EntitySet="Suscripcion" />
+            <End Role="Usuario" EntitySet="Usuario" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="spotifyModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="spotifyEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Albums" EntityType="spotifyModel.Album" />
+          <EntitySet Name="DetallePlayLists" EntityType="spotifyModel.DetallePlayList" />
+          <EntitySet Name="Facturacions" EntityType="spotifyModel.Facturacion" />
+          <EntitySet Name="Musicas" EntityType="spotifyModel.Musica" />
+          <EntitySet Name="Perfils" EntityType="spotifyModel.Perfil" />
+          <EntitySet Name="Planes" EntityType="spotifyModel.Plane" />
+          <EntitySet Name="PlayLists" EntityType="spotifyModel.PlayList" />
+          <EntitySet Name="Suscripcions" EntityType="spotifyModel.Suscripcion" />
+          <EntitySet Name="Usuarios" EntityType="spotifyModel.Usuario" />
+          <AssociationSet Name="FK_Musica_Album" Association="spotifyModel.FK_Musica_Album">
+            <End Role="Album" EntitySet="Albums" />
+            <End Role="Musica" EntitySet="Musicas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DetallePlayList_Musica" Association="spotifyModel.FK_DetallePlayList_Musica">
+            <End Role="Musica" EntitySet="Musicas" />
+            <End Role="DetallePlayList" EntitySet="DetallePlayLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DetallePlayList_PlayList" Association="spotifyModel.FK_DetallePlayList_PlayList">
+            <End Role="PlayList" EntitySet="PlayLists" />
+            <End Role="DetallePlayList" EntitySet="DetallePlayLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Facturacion_Suscripcion" Association="spotifyModel.FK_Facturacion_Suscripcion">
+            <End Role="Suscripcion" EntitySet="Suscripcions" />
+            <End Role="Facturacion" EntitySet="Facturacions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Perfil_Usuario" Association="spotifyModel.FK_Perfil_Usuario">
+            <End Role="Usuario" EntitySet="Usuarios" />
+            <End Role="Perfil" EntitySet="Perfils" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Suscripcion_Planes" Association="spotifyModel.FK_Suscripcion_Planes">
+            <End Role="Plane" EntitySet="Planes" />
+            <End Role="Suscripcion" EntitySet="Suscripcions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlayList_Usuario" Association="spotifyModel.FK_PlayList_Usuario">
+            <End Role="Usuario" EntitySet="Usuarios" />
+            <End Role="PlayList" EntitySet="PlayLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuario_Suscripcion" Association="spotifyModel.FK_Usuario_Suscripcion">
+            <End Role="Suscripcion" EntitySet="Suscripcions" />
+            <End Role="Usuario" EntitySet="Usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Album">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Creador" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Imagen" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Musicas" Relationship="spotifyModel.FK_Musica_Album" FromRole="Album" ToRole="Musica" />
+        </EntityType>
+        <EntityType Name="DetallePlayList">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="IdMusica" Type="Int32" Nullable="false" />
+          <Property Name="IdPlayList" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Musica" Relationship="spotifyModel.FK_DetallePlayList_Musica" FromRole="DetallePlayList" ToRole="Musica" />
+          <NavigationProperty Name="PlayList" Relationship="spotifyModel.FK_DetallePlayList_PlayList" FromRole="DetallePlayList" ToRole="PlayList" />
+        </EntityType>
+        <EntityType Name="Facturacion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSuscripcion" Type="Int32" Nullable="false" />
+          <Property Name="Numero" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Importe" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="TipoPago" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="NroOperacion" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Suscripcion" Relationship="spotifyModel.FK_Facturacion_Suscripcion" FromRole="Facturacion" ToRole="Suscripcion" />
+        </EntityType>
+        <EntityType Name="Musica">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Titulo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Artista" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Año" Type="Int32" />
+          <Property Name="Archivo" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IdAlbum" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Album" Relationship="spotifyModel.FK_Musica_Album" FromRole="Musica" ToRole="Album" />
+          <NavigationProperty Name="DetallePlayLists" Relationship="spotifyModel.FK_DetallePlayList_Musica" FromRole="Musica" ToRole="DetallePlayList" />
+        </EntityType>
+        <EntityType Name="Perfil">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Imagen" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CantSeguidores" Type="Int32" />
+          <Property Name="IdUsuario" Type="Int32" />
+          <NavigationProperty Name="Usuario" Relationship="spotifyModel.FK_Perfil_Usuario" FromRole="Perfil" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Plane">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="Detalle" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Precio" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Moneda" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Suscripcions" Relationship="spotifyModel.FK_Suscripcion_Planes" FromRole="Plane" ToRole="Suscripcion" />
+        </EntityType>
+        <EntityType Name="PlayList">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="Imagen" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Acceso" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="DetallePlayLists" Relationship="spotifyModel.FK_DetallePlayList_PlayList" FromRole="PlayList" ToRole="DetallePlayList" />
+          <NavigationProperty Name="Usuario" Relationship="spotifyModel.FK_PlayList_Usuario" FromRole="PlayList" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Suscripcion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPlan" Type="Int32" Nullable="false" />
+          <Property Name="Fecha_Ini" Type="DateTime" Precision="3" />
+          <Property Name="Fecha_Fin" Type="DateTime" Precision="3" />
+          <Property Name="Tarjeta_codigo" Type="String" MaxLength="5" FixedLength="true" Unicode="true" />
+          <Property Name="Tarjeta_numero" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Tarjeta_fech_ecp" Type="DateTime" Precision="3" />
+          <Property Name="Estado" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Facturacions" Relationship="spotifyModel.FK_Facturacion_Suscripcion" FromRole="Suscripcion" ToRole="Facturacion" />
+          <NavigationProperty Name="Plane" Relationship="spotifyModel.FK_Suscripcion_Planes" FromRole="Suscripcion" ToRole="Plane" />
+          <NavigationProperty Name="Usuarios" Relationship="spotifyModel.FK_Usuario_Suscripcion" FromRole="Suscripcion" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="email" Type="String" MaxLength="30" FixedLength="true" Unicode="true" />
+          <Property Name="contrasena" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="fecha_nacimiento" Type="DateTime" Precision="3" />
+          <Property Name="nombre_perfil" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="sexo" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="IdSuscripcion" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Perfils" Relationship="spotifyModel.FK_Perfil_Usuario" FromRole="Usuario" ToRole="Perfil" />
+          <NavigationProperty Name="PlayLists" Relationship="spotifyModel.FK_PlayList_Usuario" FromRole="Usuario" ToRole="PlayList" />
+          <NavigationProperty Name="Suscripcion" Relationship="spotifyModel.FK_Usuario_Suscripcion" FromRole="Usuario" ToRole="Suscripcion" />
+        </EntityType>
+        <Association Name="FK_Musica_Album">
+          <End Type="spotifyModel.Album" Role="Album" Multiplicity="1" />
+          <End Type="spotifyModel.Musica" Role="Musica" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Album">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Musica">
+              <PropertyRef Name="IdAlbum" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DetallePlayList_Musica">
+          <End Type="spotifyModel.Musica" Role="Musica" Multiplicity="1" />
+          <End Type="spotifyModel.DetallePlayList" Role="DetallePlayList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Musica">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DetallePlayList">
+              <PropertyRef Name="IdMusica" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DetallePlayList_PlayList">
+          <End Type="spotifyModel.PlayList" Role="PlayList" Multiplicity="1" />
+          <End Type="spotifyModel.DetallePlayList" Role="DetallePlayList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PlayList">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DetallePlayList">
+              <PropertyRef Name="IdPlayList" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Facturacion_Suscripcion">
+          <End Type="spotifyModel.Suscripcion" Role="Suscripcion" Multiplicity="1" />
+          <End Type="spotifyModel.Facturacion" Role="Facturacion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suscripcion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Facturacion">
+              <PropertyRef Name="IdSuscripcion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Perfil_Usuario">
+          <End Type="spotifyModel.Usuario" Role="Usuario" Multiplicity="0..1" />
+          <End Type="spotifyModel.Perfil" Role="Perfil" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Perfil">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Suscripcion_Planes">
+          <End Type="spotifyModel.Plane" Role="Plane" Multiplicity="1" />
+          <End Type="spotifyModel.Suscripcion" Role="Suscripcion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plane">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Suscripcion">
+              <PropertyRef Name="IdPlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlayList_Usuario">
+          <End Type="spotifyModel.Usuario" Role="Usuario" Multiplicity="1" />
+          <End Type="spotifyModel.PlayList" Role="PlayList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlayList">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuario_Suscripcion">
+          <End Type="spotifyModel.Suscripcion" Role="Suscripcion" Multiplicity="1" />
+          <End Type="spotifyModel.Usuario" Role="Usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suscripcion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Usuario">
+              <PropertyRef Name="IdSuscripcion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="spotifyModelStoreContainer" CdmEntityContainer="spotifyEntities">
+          <EntitySetMapping Name="Albums">
+            <EntityTypeMapping TypeName="spotifyModel.Album">
+              <MappingFragment StoreEntitySet="Album">
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+                <ScalarProperty Name="Creador" ColumnName="Creador" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DetallePlayLists">
+            <EntityTypeMapping TypeName="spotifyModel.DetallePlayList">
+              <MappingFragment StoreEntitySet="DetallePlayList">
+                <ScalarProperty Name="IdPlayList" ColumnName="IdPlayList" />
+                <ScalarProperty Name="IdMusica" ColumnName="IdMusica" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Facturacions">
+            <EntityTypeMapping TypeName="spotifyModel.Facturacion">
+              <MappingFragment StoreEntitySet="Facturacion">
+                <ScalarProperty Name="NroOperacion" ColumnName="NroOperacion" />
+                <ScalarProperty Name="TipoPago" ColumnName="TipoPago" />
+                <ScalarProperty Name="Importe" ColumnName="Importe" />
+                <ScalarProperty Name="Numero" ColumnName="Numero" />
+                <ScalarProperty Name="IdSuscripcion" ColumnName="IdSuscripcion" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Musicas">
+            <EntityTypeMapping TypeName="spotifyModel.Musica">
+              <MappingFragment StoreEntitySet="Musica">
+                <ScalarProperty Name="IdAlbum" ColumnName="IdAlbum" />
+                <ScalarProperty Name="Archivo" ColumnName="Archivo" />
+                <ScalarProperty Name="Año" ColumnName="Año" />
+                <ScalarProperty Name="Artista" ColumnName="Artista" />
+                <ScalarProperty Name="Titulo" ColumnName="Titulo" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Perfils">
+            <EntityTypeMapping TypeName="spotifyModel.Perfil">
+              <MappingFragment StoreEntitySet="Perfil">
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="CantSeguidores" ColumnName="CantSeguidores" />
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Planes">
+            <EntityTypeMapping TypeName="spotifyModel.Plane">
+              <MappingFragment StoreEntitySet="Planes">
+                <ScalarProperty Name="Moneda" ColumnName="Moneda" />
+                <ScalarProperty Name="Precio" ColumnName="Precio" />
+                <ScalarProperty Name="Detalle" ColumnName="Detalle" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlayLists">
+            <EntityTypeMapping TypeName="spotifyModel.PlayList">
+              <MappingFragment StoreEntitySet="PlayList">
+                <ScalarProperty Name="Acceso" ColumnName="Acceso" />
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Suscripcions">
+            <EntityTypeMapping TypeName="spotifyModel.Suscripcion">
+              <MappingFragment StoreEntitySet="Suscripcion">
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Tarjeta_fech_ecp" ColumnName="Tarjeta_fech_ecp" />
+                <ScalarProperty Name="Tarjeta_numero" ColumnName="Tarjeta_numero" />
+                <ScalarProperty Name="Tarjeta_codigo" ColumnName="Tarjeta_codigo" />
+                <ScalarProperty Name="Fecha_Fin" ColumnName="Fecha_Fin" />
+                <ScalarProperty Name="Fecha_Ini" ColumnName="Fecha_Ini" />
+                <ScalarProperty Name="IdPlan" ColumnName="IdPlan" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="spotifyModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuario">
+                <ScalarProperty Name="IdSuscripcion" ColumnName="IdSuscripcion" />
+                <ScalarProperty Name="sexo" ColumnName="sexo" />
+                <ScalarProperty Name="nombre_perfil" ColumnName="nombre_perfil" />
+                <ScalarProperty Name="fecha_nacimiento" ColumnName="fecha_nacimiento" />
+                <ScalarProperty Name="contrasena" ColumnName="contrasena" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

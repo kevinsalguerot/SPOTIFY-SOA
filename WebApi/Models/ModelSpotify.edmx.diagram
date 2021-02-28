@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="58a9fb1fba304962a36cee5cc30322fa" Name="Diagram1">
+        <EntityTypeShape EntityType="spotifyModel.Album" Width="1.5" PointX="5.25" PointY="11.625" />
+        <EntityTypeShape EntityType="spotifyModel.DetallePlayList" Width="1.5" PointX="9.75" PointY="7.625" />
+        <EntityTypeShape EntityType="spotifyModel.Facturacion" Width="1.5" PointX="5.25" PointY="1.25" />
+        <EntityTypeShape EntityType="spotifyModel.Musica" Width="1.5" PointX="7.5" PointY="11.25" />
+        <EntityTypeShape EntityType="spotifyModel.Perfil" Width="1.5" PointX="7.5" PointY="4.375" />
+        <EntityTypeShape EntityType="spotifyModel.Plane" Width="1.5" PointX="0.75" PointY="4.5" />
+        <EntityTypeShape EntityType="spotifyModel.PlayList" Width="1.5" PointX="7.5" PointY="7.25" />
+        <EntityTypeShape EntityType="spotifyModel.Suscripcion" Width="1.5" PointX="3" PointY="4" />
+        <EntityTypeShape EntityType="spotifyModel.Usuario" Width="1.5" PointX="5.25" PointY="5.625" />
+        <AssociationConnector Association="spotifyModel.FK_Musica_Album" />
+        <AssociationConnector Association="spotifyModel.FK_DetallePlayList_Musica" />
+        <AssociationConnector Association="spotifyModel.FK_DetallePlayList_PlayList" />
+        <AssociationConnector Association="spotifyModel.FK_Facturacion_Suscripcion" />
+        <AssociationConnector Association="spotifyModel.FK_Perfil_Usuario" />
+        <AssociationConnector Association="spotifyModel.FK_Suscripcion_Planes" />
+        <AssociationConnector Association="spotifyModel.FK_PlayList_Usuario" />
+        <AssociationConnector Association="spotifyModel.FK_Usuario_Suscripcion" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

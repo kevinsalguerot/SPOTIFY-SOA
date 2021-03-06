@@ -170,6 +170,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\BusquedaMusicaController.cs" />
     <Compile Include="Controllers\FacturacionController.cs" />
+    <Compile Include="Controllers\PublicarMusicaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

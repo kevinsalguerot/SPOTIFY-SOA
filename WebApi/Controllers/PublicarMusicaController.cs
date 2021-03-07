@@ -19,15 +19,10 @@ namespace WebApi.Controllers
         {
             return Musica.ObtenerMusica(id);
         }
-        [HttpPut]
-        [Route("api/PublicarMusica/RegistraMusica")]
-        public musicadto RegistrarAlumno(musicadto alumnodto)
-        {
-            return Musica.RegistrarMusica(alumnodto);
-        }
+        
         [HttpPost]
         [Route("api/AfiliacionUsuarios/ActualizarMusica")]
-        public musicadto ActualizarAlumno(int id, musicadto alumnodto)
+        public musicadto ActualizarMusica(int id, musicadto alumnodto)
         {
             return Musica.ActualizarMusica(id, alumnodto);
         }
